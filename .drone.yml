@@ -1,0 +1,25 @@
+workspace:
+  base: /drone
+  path: src/github.com/qnib/go-testhttpd
+
+pipeline:
+  unit-test:
+    image: qnib/golang
+    commands:
+     - ./test.sh
+    environment:
+     - GOPATH=/drone/
+  build:
+    image: qnib/alpn-go-dev:1.7
+    commands:
+      - go build -o go-testhttpd_musl
+    environment:
+     - GOPATH=/drone/
+  smoke-test:
+    image: alpine:latest
+    commands:
+      - ./go-testhttpd_musl --help
+#  slack:
+#    image: plugins/slack
+#    channel: drone
+#    username: drone
